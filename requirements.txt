@@ -1,0 +1,8 @@
+torch>=2.0
+accelerate>=0.23
+einops>=0.7
+h5py>=3.7
+numpy
+pyyaml
+scipy
+tqdm
