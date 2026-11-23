@@ -1,5 +1,5 @@
 """Print the final test L2RE of the pre-training run and the twelve fine-tuning runs of one size in the
-column order of Table 4. Usage: python scripts/summarize.py ti|s|m [runs folder]"""
+column order of Table 4. Usage: python scripts/summarize.py ti|s|m|l [runs folder]"""
 import json
 import sys
 

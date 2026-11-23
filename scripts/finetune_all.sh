@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # FT-500 of a pre-trained model on each of the twelve datasets, one GPU per run (Table 4, fine-tuned rows).
-# Usage: bash scripts/finetune_all.sh ti|s|m [pre-trained checkpoint]
+# Usage: bash scripts/finetune_all.sh ti|s|m|l [pre-trained checkpoint]
 # GPUS="0 1 2 3" runs four datasets at a time, one per GPU (default: GPU 0 only).
 set -e
 SIZE=${1:-ti}

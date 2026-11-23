@@ -1,15 +1,15 @@
 # SCOFormer
 
 Code for **SCOFormer: a spectral–coordinate operator transformer for parameter-efficient PDE pre-training**
-(Expert Systems with Applications, 2026).
+(Expert Systems with Applications, 2026). [[Paper]](https://www.sciencedirect.com/science/article/abs/pii/S0957417426041035)
 
 SCOFormer is an auto-regressive neural operator for 2D time-dependent PDEs. Each HybridBlock adds a grouped
 factorized Fourier layer (GFFNO) and a coordinate-attention branch. In the first block, a kernel router mixes K basis
 spectral kernels per input. The models are pre-trained on twelve datasets with an auto-regressive denoising objective
 and then fine-tuned on each dataset.
 
-This repository reproduces the main results (Table 4 of the paper) for SCO-Ti, SCO-S, and SCO-M:
-pre-training on the twelve datasets and 500-epoch fine-tuning (FT-500) on each of them.
+This repository contains the code for the main results (Table 4 of the paper) at the four model sizes SCO-Ti,
+SCO-S, SCO-M, and SCO-L: pre-training on the twelve datasets and 500-epoch fine-tuning (FT-500) on each of them.
 Pre-trained weights will be released later.
 
 ## Installation
@@ -72,7 +72,7 @@ grid point. CFDBench scores u and v; it does not score the flow-region mask.
 ## Pre-training
 
 ```bash
-bash scripts/pretrain.sh ti        # or s, m; 8 GPUs x 20 samples = 160 samples per update
+bash scripts/pretrain.sh ti        # or s, m, l; 8 GPUs x 20 samples = 160 samples per update
 ```
 
 This runs `accelerate launch --multi_gpu --num_processes 8 --mixed_precision no train.py --config configs/scoformer_ti.yaml --stage pretrain`.
@@ -118,21 +118,6 @@ To evaluate a saved checkpoint again (`--out` writes a JSON file in the format o
 python evaluate.py --config configs/scoformer_ti.yaml --ckpt runs/scoformer_ti_pretrain/model.pth
 ```
 
-## Results
-
-L2RE from Table 4 of the paper. The main runs did not fix random seeds, so new runs differ slightly.
-
-| Model | 1e-5 | 1e-4 | 1e-3 | (1, 0.1) | (1, 0.01) | (0.1, 0.1) | (0.1, 0.01) | DR | SWE | NS | NS-c | CFD |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| SCO-Ti, pre-trained | 0.0625 | 0.0515 | 0.00861 | 0.0147 | 0.0339 | 0.0112 | 0.0169 | 0.0486 | 0.00404 | 0.118 | 0.361 | 0.01008 |
-| SCO-S, pre-trained | 0.0458 | 0.0450 | 0.00701 | 0.0121 | 0.0259 | 0.00948 | 0.0135 | 0.0318 | 0.00306 | 0.0973 | 0.315 | 0.00989 |
-| SCO-M, pre-trained | 0.0361 | 0.0318 | 0.00485 | 0.0115 | 0.0238 | 0.01015 | 0.0145 | 0.0248 | 0.00301 | 0.0825 | 0.275 | 0.00898 |
-| SCO-Ti, FT-500 | 0.0379 | 0.0280 | 0.00539 | 0.00710 | 0.0106 | 0.00844 | 0.00625 | 0.0208 | 0.00242 | 0.0594 | 0.295 | 0.00480 |
-| SCO-S, FT-500 | 0.0271 | 0.00963 | 0.00446 | 0.00686 | 0.00848 | 0.00795 | 0.00574 | 0.0173 | 0.00160 | 0.0400 | 0.236 | 0.00480 |
-| SCO-M, FT-500 | 0.0231 | 0.00957 | 0.00423 | 0.00722 | 0.00823 | 0.01023 | 0.00550 | 0.0145 | 0.00219 | 0.0308 | 0.200 | 0.00391 |
-
-The first three columns are the FNO viscosities ν, and the next four are the PDEBench compressible NS settings (M, η).
-
 ## Model sizes
 
 | Config | C | L | K | G | r | Parameters |
@@ -140,6 +125,7 @@ The first three columns are the FNO viscosities ν, and the next four are the PD
 | `configs/scoformer_ti.yaml` | 256 | 6 | 4 | 4 | 1 | 8.6 M |
 | `configs/scoformer_s.yaml` | 512 | 8 | 6 | 8 | 1 | 30 M |
 | `configs/scoformer_m.yaml` | 1024 | 12 | 8 | 16 | 1 | 121 M |
+| `configs/scoformer_l.yaml` | 1024 | 24 | 12 | 16 | 4 | 373 M |
 
 C is the embedding width, L the number of HybridBlocks, K the number of basis kernels in the first block, G the
 number of GFFNO channel groups, and r the FFN expansion ratio. All sizes keep m = 9 Fourier modes per axis, which
@@ -170,6 +156,8 @@ PDEBench, PDEArena, and CFDBench datasets.
   title   = {{SCOFormer}: a spectral--coordinate operator transformer for parameter-efficient {PDE} pre-training},
   author  = {Li, Qixuan and Yao, Shunchun and Liang, Xiaojun and Zhang, Xiaoning and Yang, Chunhua and Gui, Weihua and Luo, Weichao},
   journal = {Expert Systems with Applications},
-  year    = {2026}
+  pages   = {135201},
+  year    = {2026},
+  doi     = {10.1016/j.eswa.2026.135201}
 }
 ```
